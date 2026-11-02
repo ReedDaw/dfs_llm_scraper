@@ -1,0 +1,9 @@
+# Your own config and credentials: never commit
+projects.yaml
+*.json
+.env
+.env.*
+# Run output and caches
+output/
+__pycache__/
+.pytest_cache/

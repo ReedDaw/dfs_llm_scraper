@@ -1,0 +1,5 @@
+requests>=2.31
+pyyaml>=6.0
+gspread>=6.0
+google-auth>=2.20
+google-cloud-bigquery>=3.11   # only needed if bigquery_table_prefix is set

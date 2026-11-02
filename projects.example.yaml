@@ -1,0 +1,8 @@
+# Example only. Don't commit your real project list to a public repo.
+# Put your real list in a GitHub secret named PROJECTS_YAML (same format),
+# or in a local projects.yaml (git-ignored) for running on your own machine.
+projects:
+  - name: my-brand
+    sheet_id: REPLACE_WITH_SHEET_ID   # the long id in the Sheet URL: /d/<sheet_id>/edit
+  # - name: second-brand
+  #   sheet_id: ...

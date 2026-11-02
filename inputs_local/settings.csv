@@ -1,0 +1,13 @@
+setting,value,notes
+platforms,"google_serp, google_ai_mode, perplexity, chatgpt, gemini, claude",Remove any you don't want to pay for
+run_on,weekly:mon,daily | weekly:mon | monthly:1 | off
+brand_domains,yourbrand.com,Your site(s); comma separated
+brand_terms,yourbrand,Words that count as a brand mention (blank = derived from domain)
+competitor_domains,"competitor-one.com, competitor-two.com",Comma separated
+location_code,2840,2840 = United States
+language_code,en,
+country_iso,US,
+device,desktop,desktop or mobile
+serp_depth,20,Organic results to collect per keyword
+max_queries,500,Safety cap per tab
+bigquery_table_prefix,,Optional e.g. myproj.ai_visibility.mybrand_

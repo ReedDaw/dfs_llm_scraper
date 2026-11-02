@@ -1,0 +1,53 @@
+name: AI visibility pipeline
+
+on:
+  schedule:
+    # Daily 11:17 UTC (6:17am Central). Each project's Sheet decides via
+    # `run_on` whether today is a run day, so cadence changes never touch this file.
+    - cron: "17 11 * * *"
+  workflow_dispatch:
+    inputs:
+      project:
+        description: "Project name (blank = all)"
+        required: false
+      force:
+        description: "Run even if not scheduled today"
+        type: boolean
+        default: true
+
+concurrency:
+  group: ai-visibility
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Run pipeline
+        env:
+          DFS_LOGIN: ${{ secrets.DFS_LOGIN }}
+          DFS_PASSWORD: ${{ secrets.DFS_PASSWORD }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          PROJECTS_YAML: ${{ secrets.PROJECTS_YAML }}
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.project }}" ]; then ARGS="$ARGS --project ${{ inputs.project }}"; fi
+          if [ "${{ inputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
+          python run_pipeline.py $ARGS
+      # Artifacts on a public repo can be downloaded by anyone, so only keep
+      # the raw CSVs when this copy of the repo is private.
+      - name: Keep raw CSVs (private repos only)
+        if: always() && github.event.repository.private
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-visibility-${{ github.run_id }}
+          path: output/
+          retention-days: 90
+          if-no-files-found: ignore
